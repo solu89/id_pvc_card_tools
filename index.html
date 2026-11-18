@@ -836,686 +836,13 @@
         <span id="toastMessage">Action completed successfully!</span>
     </div>
 
-    <!-- DEDICATED PRINT MOUNT AREA (NO TAILWIND HIDDEN CLASS SO @MEDIA PRINT CAN DISPLAY IT) -->
+    <!-- DEDICATED PRINT MOUNT AREA -->
     <div id="printMountArea"></div>
-
-        @media print {
-            body * {
-                visibility: hidden !important;
-            }
-            #printMountArea, #printMountArea * {
-                visibility: visible !important;
-            }
-            #printMountArea {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
-            }
-            @page {
-                size: A4 portrait;
-                margin: 6mm;
-            }
-            .print-page-break {
-                page-break-after: always;
-            }
-        }
-
-        .card-shadow {
-            box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-    </style>
-</head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col overflow-x-hidden">
-
-    <!-- TOP ENTERPRISE HEADER -->
-    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-2.5">
-        <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
-            <!-- Brand Identity -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white font-black text-lg tracking-wider">
-                    SD
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="font-extrabold text-sm sm:text-base tracking-tight bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400 bg-clip-text text-transparent">
-                            SOLU DIGITAL TOOLS
-                        </h1>
-                        <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">
-                            200+ Templates Pro
-                        </span>
-                    </div>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                        ID Card & PVC Card Maker Studio • CR80 Front/Back • Bulk CSV & A4 Sheet Engine
-                    </p>
-                </div>
-            </div>
-
-            <!-- Quick Action Bar -->
-            <div class="flex items-center flex-wrap gap-1.5 sm:gap-2">
-                <!-- Active Template Badge -->
-                <div class="hidden xl:flex items-center gap-2 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg text-xs">
-                    <span class="text-slate-400">Active Template:</span>
-                    <span id="activeTemplateBadge" class="font-bold text-indigo-600 dark:text-indigo-400">#001 Corporate Apex</span>
-                </div>
-
-                <!-- Add to Batch Queue -->
-                <button onclick="addToBatchQueue()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition active:scale-95">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    <span>Add to Queue</span>
-                    <span id="headerQueueCount" class="ml-1 px-1.5 py-0.2 bg-black/25 rounded-full text-[10px]">0</span>
-                </button>
-
-                <!-- High-Res PNG Download Dropdown/Buttons -->
-                <button onclick="exportCardImage('combined')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition active:scale-95">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    <span>Save HD PNG</span>
-                </button>
-
-                <!-- Open A4 Print Sheet Modal -->
-                <button onclick="switchMainTab('print')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-sm transition active:scale-95">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    <span class="hidden sm:inline">A4 & PVC Print</span>
-                </button>
-
-                <!-- Theme Toggle -->
-                <button onclick="toggleDarkMode()" title="Toggle Light/Dark Theme" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition">
-                    <svg id="themeIconSun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    <svg id="themeIconMoon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN WORKSPACE CONTAINER -->
-    <main class="flex-1 max-w-[1920px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-0 lg:h-[calc(100vh-61px)] overflow-hidden">
-
-        <!-- LEFT CONTROL PANEL (5 COLUMNS ON DESKTOP) -->
-        <section class="lg:col-span-5 xl:col-span-5 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col lg:h-full overflow-hidden">
-
-            <!-- Navigation Tabs -->
-            <nav class="grid grid-cols-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-1 gap-1">
-                <button onclick="switchMainTab('templates')" id="tabBtn-templates" class="tab-btn flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[11px] font-bold transition bg-indigo-600 text-white shadow">
-                    <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
-                    <span>200+ Designs</span>
-                </button>
-                <button onclick="switchMainTab('details')" id="tabBtn-details" class="tab-btn flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[11px] font-bold transition text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800">
-                    <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
-                    <span>Card Data</span>
-                </button>
-                <button onclick="switchMainTab('media')" id="tabBtn-media" class="tab-btn flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[11px] font-bold transition text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800">
-                    <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <span>Photo & Sign</span>
-                </button>
-                <button onclick="switchMainTab('style')" id="tabBtn-style" class="tab-btn flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[11px] font-bold transition text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800">
-                    <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-                    <span>Customize</span>
-                </button>
-                <button onclick="switchMainTab('print')" id="tabBtn-print" class="tab-btn flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[11px] font-bold transition text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800">
-                    <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                    <span>Bulk & A4</span>
-                </button>
-            </nav>
-
-            <!-- TAB 1: 200+ TEMPLATES BROWSER -->
-            <div id="tabContent-templates" class="tab-pane flex-1 flex flex-col overflow-hidden p-3 sm:p-4 space-y-3">
-                <!-- Search & Orientation Filters -->
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <div class="relative flex-1">
-                        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" id="templateSearchInput" oninput="filterTemplates()" placeholder="Search 200 templates (e.g., School, IT, Press, Gold, #045)..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div class="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700 text-[11px] font-semibold">
-                        <button onclick="setOrientationFilter('all')" id="orientBtn-all" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white">All (200)</button>
-                        <button onclick="setOrientationFilter('vertical')" id="orientBtn-vertical" class="px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-300">Vertical</button>
-                        <button onclick="setOrientationFilter('horizontal')" id="orientBtn-horizontal" class="px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-300">Horizontal</button>
-                    </div>
-                </div>
-
-                <!-- Category Filter Pills -->
-                <div id="categoryPillsContainer" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-                    <!-- Populated via JS -->
-                </div>
-
-                <!-- Showing Count & Randomize -->
-                <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
-                    <span id="templateCountDisplay">Showing 200 of 200 templates</span>
-                    <button onclick="pickRandomTemplate()" class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold flex items-center gap-1">
-                        <span>🎲 Surprise Me</span>
-                    </button>
-                </div>
-
-                <!-- 200 Template Grid -->
-                <div id="templatesGridContainer" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-2.5 pr-1 pb-6">
-                    <!-- Populated dynamically with 200 visual SVG mini-cards -->
-                </div>
-            </div>
-
-            <!-- TAB 2: CARDHOLDER & ORGANIZATION DETAILS -->
-            <div id="tabContent-details" class="tab-pane hidden flex-1 overflow-y-auto p-3 sm:p-4 space-y-5">
-                <!-- Quick Sector Preset Loader -->
-                <div class="bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-3">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-300">Quick Sample Data Presets</span>
-                        <span class="text-[10px] text-slate-500">Fill demo fields instantly</span>
-                    </div>
-                    <div class="grid grid-cols-4 gap-1.5">
-                        <button onclick="loadSampleData('corporate')" class="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-indigo-600 hover:text-white text-[11px] font-semibold border border-slate-200 dark:border-slate-700 transition">🏢 IT Staff</button>
-                        <button onclick="loadSampleData('school')" class="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-indigo-600 hover:text-white text-[11px] font-semibold border border-slate-200 dark:border-slate-700 transition">🎓 School</button>
-                        <button onclick="loadSampleData('hospital')" class="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-indigo-600 hover:text-white text-[11px] font-semibold border border-slate-200 dark:border-slate-700 transition">🏥 Medical</button>
-                        <button onclick="loadSampleData('press')" class="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-indigo-600 hover:text-white text-[11px] font-semibold border border-slate-200 dark:border-slate-700 transition">🎥 Press</button>
-                    </div>
-                </div>
-
-                <!-- Cardholder Personal Details -->
-                <div class="space-y-3">
-                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-1.5 flex items-center justify-between">
-                        <span>1. Cardholder Information (Front & Back)</span>
-                        <span class="text-[10px] font-normal text-indigo-400">Live Sync</span>
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="sm:col-span-2">
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Full Name *</label>
-                            <input type="text" id="inp_fullName" oninput="syncFormToState()" value="AARAV SHARMA" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Designation / Class / Role</label>
-                            <input type="text" id="inp_designation" oninput="syncFormToState()" value="SENIOR SOFTWARE ARCHITECT" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">ID / Roll / Badge No.</label>
-                            <input type="text" id="inp_idNumber" oninput="syncFormToState()" value="SDT-2026-089" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Department / Stream / Zone</label>
-                            <input type="text" id="inp_department" oninput="syncFormToState()" value="Cloud & AI Engineering" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Blood Group</label>
-                            <input type="text" id="inp_bloodGroup" oninput="syncFormToState()" value="O+ Positive" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Date of Birth / Guardian</label>
-                            <input type="text" id="inp_dob" oninput="syncFormToState()" value="14 Aug 1996" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Mobile / Emergency Contact</label>
-                            <input type="text" id="inp_phone" oninput="syncFormToState()" value="+91 98765 43210" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Issue Date</label>
-                            <input type="text" id="inp_issueDate" oninput="syncFormToState()" value="01 Jan 2025" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Valid Thru / Expiry</label>
-                            <input type="text" id="inp_validDate" oninput="syncFormToState()" value="31 Dec 2027" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Cardholder Residential Address (Back Side)</label>
-                            <input type="text" id="inp_holderAddress" oninput="syncFormToState()" value="Flat 402, Cyber Heights, Sector 62, Noida, UP - 201309" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Organization / Institution Details -->
-                <div class="space-y-3 pt-2">
-                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-1.5">
-                        2. Organization / School / Company Info
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="sm:col-span-2">
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Organization Name *</label>
-                            <input type="text" id="inp_orgName" oninput="syncFormToState()" value="SOLU DIGITAL TECHNOLOGIES" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Tagline / Sub-Header / Reg No.</label>
-                            <input type="text" id="inp_orgTagline" oninput="syncFormToState()" value="ISO 9001:2015 Certified Enterprise" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Card Badge Title (Top/Bottom Pill)</label>
-                            <input type="text" id="inp_cardBadge" oninput="syncFormToState()" value="IDENTITY CARD" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Helpline / Office Phone</label>
-                            <input type="text" id="inp_orgPhone" oninput="syncFormToState()" value="+91 11 4567 8900" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Website / Official Email</label>
-                            <input type="text" id="inp_orgWeb" oninput="syncFormToState()" value="www.soludigital.in | hr@soludigital.in" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Organization Headquarters Address (Back Side)</label>
-                            <input type="text" id="inp_orgAddress" oninput="syncFormToState()" value="Plot 18, Tech Boulevard, Connaught Place, New Delhi - 110001" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Authorized Signatory Title</label>
-                            <input type="text" id="inp_signTitle" oninput="syncFormToState()" value="Authorized Signatory" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Custom QR / Barcode Data Override</label>
-                            <input type="text" id="inp_qrCustom" oninput="syncFormToState()" placeholder="Leave blank for auto ID vCard" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">Back Side Terms & Return Instructions (One per line)</label>
-                            <textarea id="inp_terms" oninput="syncFormToState()" rows="3" class="w-full px-3 py-2 text-xs rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">1. This card is the property of SOLU DIGITAL TECHNOLOGIES and is non-transferable.
-2. Must be worn visibly at all times inside campus/office premises.
-3. If found, please return to the office address mentioned below or call helpline.</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: PHOTO, LOGO & DIGITAL SIGNATURE STUDIO -->
-            <div id="tabContent-media" class="tab-pane hidden flex-1 overflow-y-auto p-3 sm:p-4 space-y-5">
-                <!-- Passport Photo Studio -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">1. Cardholder Passport Photo</h3>
-                            <p class="text-[11px] text-slate-500">Upload photo & fine-tune zoom, pan, and lighting</p>
-                        </div>
-                        <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
-                            <span>Upload Photo</span>
-                            <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'photo')">
-                        </label>
-                    </div>
-
-                    <!-- Photo Adjustment Controls -->
-                    <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-slate-700/60 text-xs">
-                        <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Photo Zoom</span><span id="lbl_photoZoom">100%</span></div>
-                            <input type="range" id="ctrl_photoZoom" min="0.6" max="2.5" step="0.05" value="1" oninput="updateMediaAdjustments()" class="w-full accent-indigo-600">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Brightness</span><span id="lbl_photoBright">100%</span></div>
-                            <input type="range" id="ctrl_photoBright" min="60" max="150" step="2" value="100" oninput="updateMediaAdjustments()" class="w-full accent-indigo-600">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Horizontal Pan (X)</span></div>
-                            <input type="range" id="ctrl_photoPanX" min="-80" max="80" step="2" value="0" oninput="updateMediaAdjustments()" class="w-full accent-indigo-600">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Vertical Pan (Y)</span></div>
-                            <input type="range" id="ctrl_photoPanY" min="-80" max="80" step="2" value="0" oninput="updateMediaAdjustments()" class="w-full accent-indigo-600">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-1">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[11px] text-slate-500">Avatar Preset:</span>
-                            <button onclick="setBuiltInAvatar('male')" class="px-2 py-1 text-[11px] rounded bg-slate-200 dark:bg-slate-700 hover:bg-indigo-500 hover:text-white transition">👔 Male</button>
-                            <button onclick="setBuiltInAvatar('female')" class="px-2 py-1 text-[11px] rounded bg-slate-200 dark:bg-slate-700 hover:bg-indigo-500 hover:text-white transition">👩‍💼 Female</button>
-                            <button onclick="setBuiltInAvatar('student')" class="px-2 py-1 text-[11px] rounded bg-slate-200 dark:bg-slate-700 hover:bg-indigo-500 hover:text-white transition">🎓 Student</button>
-                        </div>
-                        <button onclick="resetPhotoAdjustments()" class="text-[11px] text-rose-500 hover:underline">Reset Pan/Zoom</button>
-                    </div>
-                </div>
-
-                <!-- Organization Logo Studio -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">2. Organization Logo & Watermark</h3>
-                            <p class="text-[11px] text-slate-500">Appears in header & subtle security background</p>
-                        </div>
-                        <div class="flex gap-1.5">
-                            <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
-                                <span>Upload Logo</span>
-                                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'logo')">
-                            </label>
-                            <button onclick="clearUploadedLogo()" class="px-2.5 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-xs hover:bg-rose-500 hover:text-white transition">Reset</button>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between text-xs pt-1">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="chk_showWatermark" checked onchange="syncFormToState()" class="rounded accent-indigo-600">
-                            <span>Enable Center Security Watermark Crest</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="chk_showHologram" checked onchange="syncFormToState()" class="rounded accent-indigo-600">
-                            <span>Show Gold/Silver Security Seal</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Authorized Digital Signature Pad -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">3. Authorized Signatory Stamp / Sign</h3>
-                            <p class="text-[11px] text-slate-500">Draw live signature below or upload transparent PNG</p>
-                        </div>
-                        <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-indigo-600 hover:text-white text-xs font-semibold transition">
-                            <span>Upload Sign PNG</span>
-                            <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'signature')">
-                        </label>
-                    </div>
-
-                    <!-- Live Interactive Signature Pad Canvas -->
-                    <div class="bg-white rounded-lg border-2 border-dashed border-slate-300 p-1 relative">
-                        <canvas id="signaturePadCanvas" width="380" height="90" class="w-full h-[85px] cursor-crosshair touch-none"></canvas>
-                        <span class="absolute top-1.5 left-2 text-[10px] text-slate-400 pointer-events-none select-none">✍️ Draw Official Signature Here (Mouse / Touch)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button onclick="generateDefaultSignature()" class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">Use Demo Auto-Signature</button>
-                        <button onclick="clearSignaturePad()" class="px-2.5 py-1 rounded bg-rose-500/10 text-rose-500 text-xs font-semibold hover:bg-rose-500 hover:text-white transition">Clear Pad</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: DEEP VISUAL CUSTOMIZATION & BARCODE/QR -->
-            <div id="tabContent-style" class="tab-pane hidden flex-1 overflow-y-auto p-3 sm:p-4 space-y-5">
-                <!-- Orientation & Layout Architecture -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3">
-                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">1. Card Orientation & Header Geometry</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">CR80 Orientation</label>
-                            <select id="sel_orientation" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="vertical">Vertical Portrait (54 × 85.6 mm)</option>
-                                <option value="horizontal">Horizontal Landscape (85.6 × 54 mm)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Header Architecture (10 Styles)</label>
-                            <select id="sel_headerStyle" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="wave">01. Smooth S-Wave Curve</option>
-                                <option value="slash">02. Dynamic Angled Slash</option>
-                                <option value="polygon">03. Geometric Tech Polygon</option>
-                                <option value="arch">04. Royal Dome Arch</option>
-                                <option value="shield">05. Executive V-Shield</option>
-                                <option value="ribbon">06. Dual Gold/Accent Ribbon</option>
-                                <option value="split">07. Modern Asymmetric Split</option>
-                                <option value="sidebar">08. Left Vertical Sidebar Strip</option>
-                                <option value="hex">09. Hexagon Cyber Frame</option>
-                                <option value="minimal">10. Minimalist Corporate Bar</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Photo Frame Shape</label>
-                            <select id="sel_photoShape" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="circle">Perfect Circle</option>
-                                <option value="rounded">Rounded Portrait Box</option>
-                                <option value="hexagon">Geometric Hexagon</option>
-                                <option value="shield">Crest Shield</option>
-                                <option value="diamond">Rhombus Diamond</option>
-                                <option value="square">Crisp Square</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Lanyard Slot / Punch Guide</label>
-                            <select id="sel_lanyardHole" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="slot">Standard PVC Slot Punch</option>
-                                <option value="round">Round Hole Punch</option>
-                                <option value="none">No Punch Hole (Clean PVC)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Color Palette & Typography Override -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">2. Color Theme & Pattern Engine</h3>
-                        <button onclick="resetTemplateColors()" class="text-[11px] text-indigo-500 hover:underline">Restore Template Default</button>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2.5">
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Primary Color</label>
-                            <div class="flex items-center gap-1.5">
-                                <input type="color" id="clr_primary" oninput="applyCustomStyleOverride()" value="#1e3a8a" class="w-8 h-8 rounded cursor-pointer border-0">
-                                <input type="text" id="txt_primary" oninput="syncColorHex('primary')" value="#1e3a8a" class="w-full px-2 py-1 text-xs font-mono rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Secondary / Gradient</label>
-                            <div class="flex items-center gap-1.5">
-                                <input type="color" id="clr_secondary" oninput="applyCustomStyleOverride()" value="#3b82f6" class="w-8 h-8 rounded cursor-pointer border-0">
-                                <input type="text" id="txt_secondary" oninput="syncColorHex('secondary')" value="#3b82f6" class="w-full px-2 py-1 text-xs font-mono rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Accent / Badge</label>
-                            <div class="flex items-center gap-1.5">
-                                <input type="color" id="clr_accent" oninput="applyCustomStyleOverride()" value="#f59e0b" class="w-8 h-8 rounded cursor-pointer border-0">
-                                <input type="text" id="txt_accent" oninput="syncColorHex('accent')" value="#f59e0b" class="w-full px-2 py-1 text-xs font-mono rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 pt-1">
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Card Surface Background</label>
-                            <select id="sel_cardBgMode" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="light">Pure Crisp White</option>
-                                <option value="tinted">Soft Brand Tint</option>
-                                <option value="dark">Executive Dark Slate</option>
-                                <option value="cream">Warm Ivory / Govt Cream</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Security Guilloche Pattern</label>
-                            <select id="sel_bgPattern" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="guilloche">Security Guilloche Waves</option>
-                                <option value="dots">Micro Tech Dots</option>
-                                <option value="grid">Cyber Blueprint Grid</option>
-                                <option value="hexmesh">Hexagonal Mesh</option>
-                                <option value="diagonal">Subtle Diagonal Lines</option>
-                                <option value="none">Clean Solid Surface</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Typography Font Family</label>
-                            <select id="sel_fontFamily" onchange="applyCustomStyleOverride()" class="w-full px-2.5 py-2 text-xs rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="Inter">Inter (Modern Corporate)</option>
-                                <option value="Poppins">Poppins (Friendly Geometric)</option>
-                                <option value="Montserrat">Montserrat (Bold Executive)</option>
-                                <option value="Oswald">Oswald (Tall Industrial/Press)</option>
-                                <option value="Cinzel">Cinzel (Royal Academic/Govt)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Photo Border Ring Width</label>
-                            <input type="range" id="ctrl_photoBorder" min="2" max="14" value="6" oninput="applyCustomStyleOverride()" class="w-full accent-indigo-600 mt-2">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Smart QR Code & Code-128 Barcode Settings -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2.5">
-                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">3. Scannable QR Code & Barcode Controls</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            <input type="checkbox" id="chk_frontBarcode" checked onchange="applyCustomStyleOverride()" class="accent-indigo-600">
-                            <span>Front ID Barcode</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            <input type="checkbox" id="chk_frontQR" onchange="applyCustomStyleOverride()" class="accent-indigo-600">
-                            <span>Front Mini QR Code</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            <input type="checkbox" id="chk_backQR" checked onchange="applyCustomStyleOverride()" class="accent-indigo-600">
-                            <span>Back Smart vCard QR</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            <input type="checkbox" id="chk_backBarcode" checked onchange="applyCustomStyleOverride()" class="accent-indigo-600">
-                            <span>Back Security Barcode</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 5: BULK CSV GENERATOR & A4 MULTI-CARD PRINT QUEUE -->
-            <div id="tabContent-print" class="tab-pane hidden flex-1 overflow-y-auto p-3 sm:p-4 space-y-4">
-                <!-- Print & Layout Controller -->
-                <div class="bg-gradient-to-br from-indigo-600/10 via-purple-600/10 to-pink-600/10 border border-indigo-500/30 rounded-xl p-3.5 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">A4 Sheet & Direct PVC Print Engine</h3>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Print exact CR80 size (85.6mm × 54mm) with crop marks</p>
-                        </div>
-                        <button onclick="triggerDirectPrint()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-500/25 flex items-center gap-1.5 transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                            <span>Print Now</span>
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2.5 text-xs">
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Print Sheet Mode</label>
-                            <select id="sel_printMode" class="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="a4_queue">A4 Sheet — All Queued Cards (Front+Back Pairs)</option>
-                                <option value="a4_current_5x">A4 Sheet — Repeat Current Card (5 Copies)</option>
-                                <option value="single_pair">Single Card — Front & Back Side-by-Side</option>
-                                <option value="pvc_tray">Direct PVC Tray — Front & Back Separate</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold mb-1">Cut & Fold Crop Marks</label>
-                            <select id="sel_cropMarks" class="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="dashed">Dashed Cut Lines + Center Fold Line</option>
-                                <option value="solid">Solid Hairline Border</option>
-                                <option value="none">No Borders (For Pre-Punched Tray)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2 pt-1">
-                        <button onclick="exportCardImage('front')" class="flex-1 py-1.5 px-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:border-indigo-500 transition">⬇️ Front PNG</button>
-                        <button onclick="exportCardImage('back')" class="flex-1 py-1.5 px-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:border-indigo-500 transition">⬇️ Back PNG</button>
-                        <button onclick="exportCardImage('combined')" class="flex-1 py-1.5 px-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:border-indigo-500 transition">⬇️ Both Side PNG</button>
-                    </div>
-                </div>
-
-                <!-- Bulk CSV Import Studio -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2.5">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-200">Bulk CSV / Excel Batch Importer</h3>
-                            <p class="text-[11px] text-slate-500">Generate 10, 50, or 100 staff/student cards in 1 click</p>
-                        </div>
-                        <button onclick="downloadSampleCSV()" class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">📥 Sample CSV</button>
-                    </div>
-                    <textarea id="inp_bulkCsvText" rows="3" placeholder="Paste CSV rows: FullName, Designation, IDNumber, Department, BloodGroup, DOB, Phone" class="w-full px-3 py-2 text-xs font-mono rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"></textarea>
-                    <div class="flex items-center justify-between gap-2">
-                        <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-xs font-semibold hover:bg-indigo-600 hover:text-white transition">
-                            <span>📂 Upload .CSV File</span>
-                            <input type="file" accept=".csv,.txt" class="hidden" onchange="handleCSVFileUpload(event)">
-                        </label>
-                        <button onclick="processBulkCSVInput()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">⚡ Generate Cards to Queue</button>
-                    </div>
-                </div>
-
-                <!-- Batch Print Queue List -->
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                            Active Print Batch Queue (<span id="queueListCounter">0</span> Cards)
-                        </h3>
-                        <div class="flex gap-2">
-                            <button onclick="addDemoBatch5()" class="text-[11px] text-indigo-500 hover:underline font-semibold">+ Add 5 Demo Staff</button>
-                            <button onclick="clearBatchQueue()" class="text-[11px] text-rose-500 hover:underline font-semibold">Clear All</button>
-                        </div>
-                    </div>
-                    <div id="batchQueueListContainer" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-                        <!-- Dynamically populated queued cards -->
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- RIGHT INTERACTIVE LIVE PREVIEW STAGE (7 COLUMNS ON DESKTOP) -->
-        <section class="lg:col-span-7 xl:col-span-7 studio-grid-bg flex flex-col justify-between p-3 sm:p-6 overflow-y-auto relative">
-
-            <!-- Top Stage Floating Toolbar -->
-            <div class="flex flex-wrap items-center justify-between gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 shadow-sm">
-                <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-xs font-bold">Live Dual-Side CR80 PVC Stage</span>
-                    <span id="stageDimLabel" class="text-[11px] text-slate-400 font-mono">(54mm × 85.6mm • 300 DPI Vector Canvas)</span>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <!-- View Mode Switcher -->
-                    <div class="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5 border border-slate-200 dark:border-slate-700 text-[11px] font-semibold">
-                        <button onclick="setStageViewMode('both')" id="viewBtn-both" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white">Both Sides</button>
-                        <button onclick="setStageViewMode('front')" id="viewBtn-front" class="px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-300">Front Only</button>
-                        <button onclick="setStageViewMode('back')" id="viewBtn-back" class="px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-300">Back Only</button>
-                    </div>
-
-                    <!-- Prev/Next Template Quick Stepper -->
-                    <div class="flex items-center gap-1">
-                        <button onclick="stepTemplate(-1)" title="Previous Template" class="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white text-xs font-bold transition">◀</button>
-                        <button onclick="stepTemplate(1)" title="Next Template" class="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white text-xs font-bold transition">▶</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CENTER DUAL CANVAS STAGE -->
-            <div class="my-auto py-6 flex flex-col xl:flex-row items-center justify-center gap-6 sm:gap-10">
-
-                <!-- FRONT SIDE CARD WRAPPER -->
-                <div id="frontStageWrapper" class="flex flex-col items-center gap-2.5">
-                    <div class="flex items-center justify-between w-full px-1">
-                        <span class="text-[11px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                            <span>● FRONT SIDE</span>
-                        </span>
-                        <button onclick="exportCardImage('front')" class="text-[11px] text-slate-500 hover:text-indigo-500 font-semibold">Save Front PNG ⬇</button>
-                    </div>
-                    <div class="p-2 rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm border border-slate-300/60 dark:border-slate-700/60">
-                        <canvas id="frontCardCanvas" width="638" height="1012" class="card-shadow rounded-[22px] transition-all duration-300 max-w-full h-auto" style="width: 319px; height: 506px;"></canvas>
-                    </div>
-                </div>
-
-                <!-- BACK SIDE CARD WRAPPER -->
-                <div id="backStageWrapper" class="flex flex-col items-center gap-2.5">
-                    <div class="flex items-center justify-between w-full px-1">
-                        <span class="text-[11px] font-extrabold uppercase tracking-widest text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
-                            <span>● BACK SIDE</span>
-                        </span>
-                        <button onclick="exportCardImage('back')" class="text-[11px] text-slate-500 hover:text-indigo-500 font-semibold">Save Back PNG ⬇</button>
-                    </div>
-                    <div class="p-2 rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm border border-slate-300/60 dark:border-slate-700/60">
-                        <canvas id="backCardCanvas" width="638" height="1012" class="card-shadow rounded-[22px] transition-all duration-300 max-w-full h-auto" style="width: 319px; height: 506px;"></canvas>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Bottom Quick Bar -->
-            <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                    <span>💡 <strong>Pro Shop Tip:</strong> Use <strong>"Add to Queue"</strong> to batch multiple employees/students and print 5 Front+Back cards on a single A4 PVC/Photo sheet!</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="flipCurrentOrientation()" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white font-semibold transition">
-                        🔄 Flip Vertical/Horizontal
-                    </button>
-                </div>
-            </div>
-
-        </section>
-
-    </main>
-
-    <!-- TOAST NOTIFICATION POPUP -->
-    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white border border-indigo-500/40 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-semibold">
-        <span id="toastIcon" class="text-base">✅</span>
-        <span id="toastMessage">Action completed successfully!</span>
-    </div>
-
-    <!-- DEDICATED PRINT MOUNT AREA (VISIBLE ONLY DURING WINDOW.PRINT) -->
-    <div id="printMountArea" class="hidden"></div>
 
     <!-- COMPLETE APPLICATION JAVASCRIPT ENGINE -->
     <script>
         /********************************************************************
          * 1. PROGRAMMATIC 200+ ID CARD TEMPLATES ENGINE
-         * Generates 200 distinct, well-crafted templates across 8 sectors
          ********************************************************************/
         const TEMPLATE_CATEGORIES = [
             { id: 'all', name: 'All 200+ Designs', icon: '✨', count: 200 },
@@ -1534,7 +861,6 @@
         const BG_PATTERNS = ['guilloche', 'dots', 'grid', 'hexmesh', 'diagonal', 'none'];
         const FONTS = ['Inter', 'Poppins', 'Montserrat', 'Oswald', 'Cinzel'];
 
-        // Curated High-Contrast Professional Color Triads [Primary, Secondary, Accent]
         const COLOR_PALETTES = {
             corporate: [
                 ['#0f172a', '#2563eb', '#38bdf8'], ['#1e3a8a', '#3b82f6', '#f59e0b'], ['#111827', '#4f46e5', '#818cf8'],
@@ -1602,7 +928,6 @@
                 for (let i = 0; i < sec.count; i++) {
                     const pal = palettes[i % palettes.length];
                     const adj = SERIES_ADJECTIVES[i % SERIES_ADJECTIVES.length];
-                    // Mix vertical (70%) and horizontal (30%) orientations across all 200 designs
                     const orientation = (i % 4 === 3) ? 'horizontal' : 'vertical';
                     const headerStyle = HEADER_SHAPES[(globalId + i) % HEADER_SHAPES.length];
                     const photoShape = PHOTO_SHAPES[(globalId + i * 2) % PHOTO_SHAPES.length];
@@ -1643,8 +968,6 @@
             activeCategoryFilter: 'all',
             activeOrientationFilter: 'all',
             stageViewMode: 'both',
-
-            // Style & Layout state
             orientation: 'vertical',
             headerStyle: 'wave',
             photoShape: 'circle',
@@ -1662,14 +985,10 @@
             frontQR: false,
             backQR: true,
             backBarcode: true,
-
-            // Photo pan & zoom adjustments
             photoZoom: 1,
             photoBright: 100,
             photoPanX: 0,
             photoPanY: 0,
-
-            // Text Data
             data: {
                 fullName: 'AARAV SHARMA',
                 designation: 'SENIOR SOFTWARE ARCHITECT',
@@ -1691,21 +1010,16 @@
                 qrCustom: '',
                 terms: '1. This card is the property of SOLU DIGITAL TECHNOLOGIES and is non-transferable.\n2. Must be worn visibly at all times inside campus/office premises.\n3. If found, please return to the office address mentioned below or call helpline.'
             },
-
-            // Loaded Image Objects
             photoImage: null,
             logoImage: null,
             signatureImage: null,
             builtInAvatarType: 'male',
-
-            // Batch Print Queue
             batchQueue: []
         };
 
         /********************************************************************
-         * 3. BUILT-IN OFFLINE VECTOR AVATARS, QR MATRIX & BARCODE ENGINE
+         * 3. UTILITIES & RENDERING HELPERS
          ********************************************************************/
-        // Deterministic Hash helper for QR & Barcode patterns
         function hashString(str) {
             let h = 2166136261 >>> 0;
             for (let i = 0; i < str.length; i++) {
@@ -1715,20 +1029,17 @@
             return h >>> 0;
         }
 
-        // Draw crisp scannable-style QR Matrix directly on 2D Canvas
         function drawQRCodeOnCanvas(ctx, text, x, y, size, fgColor = '#0f172a', bgColor = '#ffffff') {
-            const modules = 21; // Version 1 QR 21x21 grid
+            const modules = 21;
             const cell = size / (modules + 2);
             ctx.save();
             ctx.fillStyle = bgColor;
             drawRoundedRect(ctx, x, y, size, size, 6);
             ctx.fill();
-
             ctx.fillStyle = fgColor;
             const offsetX = x + cell;
             const offsetY = y + cell;
 
-            // Helper to check finder pattern 7x7 corners
             function isFinder(r, c) {
                 if (r < 7 && c < 7) return true;
                 if (r < 7 && c >= modules - 7) return true;
@@ -1752,25 +1063,19 @@
             drawFinderAt(0, modules - 7);
             drawFinderAt(modules - 7, 0);
 
-            // Timing patterns & deterministic payload bits
             const seed = hashString(text || 'SOLU-ID');
             for (let r = 0; r < modules; r++) {
                 for (let c = 0; c < modules; c++) {
                     if (isFinder(r, c)) continue;
-                    // Quiet separator around finders
                     if ((r === 7 && c <= 7) || (c === 7 && r <= 7)) continue;
                     if ((r === 7 && c >= modules - 8) || (c === modules - 8 && r <= 7)) continue;
                     if ((r === modules - 8 && c <= 7) || (c === 7 && r >= modules - 8)) continue;
-
-                    // Timing lines
                     if (r === 6 || c === 6) {
                         if ((r + c) % 2 === 0) {
                             ctx.fillRect(offsetX + c * cell, offsetY + r * cell, Math.ceil(cell), Math.ceil(cell));
                         }
                         continue;
                     }
-
-                    // Deterministic bit from text
                     const charCode = text.charCodeAt((r * modules + c) % Math.max(1, text.length)) || 65;
                     const bit = ((seed ^ (r * 31 + c * 17 + charCode * 13)) & 3) !== 0;
                     if (bit) {
@@ -1781,12 +1086,10 @@
             ctx.restore();
         }
 
-        // Draw crisp Code-128 style Barcode directly on 2D Canvas
         function drawBarcodeOnCanvas(ctx, codeText, x, y, width, height, barColor = '#0f172a', showText = true) {
             ctx.save();
             const cleanText = (codeText || 'SDT-2026').toUpperCase();
-            // Generate deterministic bar pattern array
-            const pattern = [2, 1, 1, 2, 1, 2]; // Start code
+            const pattern = [2, 1, 1, 2, 1, 2];
             for (let i = 0; i < cleanText.length; i++) {
                 const v = cleanText.charCodeAt(i);
                 pattern.push(((v >> 0) & 2) + 1);
@@ -1794,7 +1097,7 @@
                 pattern.push(((v >> 3) & 2) + 1);
                 pattern.push(((v >> 5) & 1) + 1);
             }
-            pattern.push(2, 1, 2, 1, 1, 2); // Stop code
+            pattern.push(2, 1, 2, 1, 1, 2);
 
             const totalUnits = pattern.reduce((a, b) => a + b, 0);
             const unitWidth = width / totalUnits;
@@ -1819,10 +1122,8 @@
             ctx.restore();
         }
 
-        // Draw Built-In Vector Avatar when user hasn't uploaded a custom photo
         function drawBuiltInAvatar(ctx, cx, cy, radius, type, primaryColor) {
             ctx.save();
-            // Soft studio backdrop
             const bgGrad = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
             bgGrad.addColorStop(0, '#e2e8f0');
             bgGrad.addColorStop(1, '#cbd5e1');
@@ -1833,13 +1134,11 @@
             ctx.translate(cx, cy);
             ctx.scale(s, s);
 
-            // Shoulders / Suit
             ctx.fillStyle = primaryColor || '#1e3a8a';
             ctx.beginPath();
             ctx.arc(0, 88, 68, Math.PI, 0, false);
             ctx.fill();
 
-            // White collar shirt & tie
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.moveTo(-22, 35);
@@ -1860,11 +1159,9 @@
                 ctx.fill();
             }
 
-            // Neck
             ctx.fillStyle = '#f1c27d';
             ctx.fillRect(-14, 18, 28, 26);
 
-            // Back hair for female
             if (type === 'female') {
                 ctx.fillStyle = '#1e293b';
                 ctx.beginPath();
@@ -1873,13 +1170,11 @@
                 ctx.fillRect(-40, -10, 80, 50);
             }
 
-            // Face
             ctx.fillStyle = '#ffdbac';
             ctx.beginPath();
             ctx.arc(0, -10, 34, 0, Math.PI * 2);
             ctx.fill();
 
-            // Hair top
             ctx.fillStyle = '#0f172a';
             ctx.beginPath();
             if (type === 'female') {
@@ -1891,7 +1186,6 @@
             }
             ctx.fill();
 
-            // Eyes & Smile
             ctx.fillStyle = '#1e293b';
             ctx.beginPath();
             ctx.arc(-12, -12, 3.2, 0, Math.PI * 2);
@@ -1908,7 +1202,6 @@
             ctx.restore();
         }
 
-        // Draw Organization Vector Crest Logo if no custom logo is uploaded
         function drawDefaultOrgLogo(ctx, cx, cy, radius, primary, accent, orgName) {
             ctx.save();
             ctx.beginPath();
@@ -1924,7 +1217,6 @@
             ctx.fillStyle = primary;
             ctx.fill();
 
-            // Initials inside shield
             const words = (orgName || 'SOLU DIGITAL').trim().split(/\s+/);
             const initials = (words[0]?.[0] || 'S') + (words[1]?.[0] || 'D');
             ctx.fillStyle = '#ffffff';
@@ -1935,9 +1227,6 @@
             ctx.restore();
         }
 
-        /********************************************************************
-         * 4. CORE CANVAS GEOMETRY & CLIPPING HELPERS
-         ********************************************************************/
         function drawRoundedRect(ctx, x, y, w, h, r) {
             const radius = Math.min(r, w / 2, h / 2);
             ctx.beginPath();
@@ -1980,7 +1269,6 @@
             ctx.closePath();
         }
 
-        // Security Background Guilloche & Pattern Renderer
         function drawCardSecurityPattern(ctx, w, h, pattern, color, isDarkBg) {
             if (pattern === 'none') return;
             ctx.save();
@@ -2044,7 +1332,6 @@
             ctx.restore();
         }
 
-        // Draw Lanyard Slot Punch Indicator at Top of Card
         function drawLanyardPunchHole(ctx, w, holeType) {
             if (holeType === 'none') return;
             ctx.save();
@@ -2064,7 +1351,6 @@
             ctx.restore();
         }
 
-        // Draw Decorative Header Shapes (10 Distinct Geometric Styles)
         function drawHeaderArtwork(ctx, w, headerH, style, primary, secondary, accent) {
             ctx.save();
             const grad = ctx.createLinearGradient(0, 0, w, headerH);
@@ -2072,7 +1358,6 @@
             grad.addColorStop(1, secondary);
 
             if (style === 'wave') {
-                // Accent under-wave
                 ctx.fillStyle = accent;
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
@@ -2082,7 +1367,6 @@
                 ctx.closePath();
                 ctx.fill();
 
-                // Main gradient wave
                 ctx.fillStyle = grad;
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
@@ -2215,7 +1499,6 @@
                 ctx.lineWidth = 7;
                 ctx.stroke();
             } else {
-                // Minimal corporate bar
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, w, headerH * 0.88);
                 ctx.fillStyle = accent;
@@ -2224,7 +1507,6 @@
             ctx.restore();
         }
 
-        // Draw Holographic Security Seal Badge
         function drawSecurityHologramSeal(ctx, cx, cy, r) {
             ctx.save();
             const holoGrad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
@@ -2233,7 +1515,6 @@
             holoGrad.addColorStop(0.7, '#fef08a');
             holoGrad.addColorStop(1, '#b45309');
 
-            // Outer starburst seal
             ctx.fillStyle = holoGrad;
             ctx.beginPath();
             const spikes = 18;
@@ -2263,9 +1544,6 @@
             ctx.restore();
         }
 
-        /********************************************************************
-         * 5. MASTER DUAL-SIDE HIGH-DPI CANVAS RENDERING ENGINE
-         ********************************************************************/
         function renderBothCardSides(customDataOverride = null, targetFrontCanvas = null, targetBackCanvas = null) {
             const frontCanvas = targetFrontCanvas || document.getElementById('frontCardCanvas');
             const backCanvas = targetBackCanvas || document.getElementById('backCardCanvas');
@@ -2280,7 +1558,6 @@
             backCanvas.width = W;
             backCanvas.height = H;
 
-            // Update CSS preview dimensions only for stage canvases
             if (!targetFrontCanvas) {
                 const cssW = isVert ? '319px' : '480px';
                 const cssH = isVert ? '506px' : '302px';
@@ -2310,20 +1587,16 @@
             return { bg: '#ffffff', textMain: '#0f172a', textSub: '#475569', boxBg: '#f8fafc', isDark: false };
         }
 
-        // Draw Photo Inside Chosen Geometric Frame with Pan/Zoom/Brightness
         function drawFramedHolderPhoto(ctx, cx, cy, radius) {
             ctx.save();
-            // Outer decorative glow/accent ring
             createPhotoClipPath(ctx, cx, cy, radius + appState.photoBorderWidth + 4, appState.photoShape);
             ctx.fillStyle = appState.accentColor;
             ctx.fill();
 
-            // White or dark inner border frame
             createPhotoClipPath(ctx, cx, cy, radius + appState.photoBorderWidth, appState.photoShape);
             ctx.fillStyle = '#ffffff';
             ctx.fill();
 
-            // Photo Content Clip
             createPhotoClipPath(ctx, cx, cy, radius, appState.photoShape);
             ctx.clip();
 
@@ -2341,7 +1614,6 @@
             ctx.restore();
         }
 
-        // Draw Organization Logo (Custom or Default Vector Crest)
         function drawOrgLogo(ctx, cx, cy, radius, d) {
             if (appState.logoImage) {
                 ctx.save();
@@ -2360,7 +1632,6 @@
             }
         }
 
-        // Draw Watermark Crest in Background
         function drawCenterWatermark(ctx, cx, cy, radius, d) {
             if (!appState.showWatermark) return;
             ctx.save();
@@ -2369,27 +1640,22 @@
             ctx.restore();
         }
 
-        // FRONT CARD RENDERER (SUPPORTS BOTH VERTICAL AND HORIZONTAL CR80)
         function renderFrontCardCanvas(ctx, W, H, d) {
             const surf = getSurfaceColors();
             const font = appState.fontFamily;
             const isVert = W < H;
 
-            // 1. Base Card Surface
             ctx.fillStyle = surf.bg;
             ctx.fillRect(0, 0, W, H);
 
-            // 2. Security Guilloche Pattern & Center Watermark
             drawCardSecurityPattern(ctx, W, H, appState.bgPattern, appState.primaryColor, surf.isDark);
             drawCenterWatermark(ctx, W / 2, isVert ? H * 0.62 : H * 0.55, isVert ? 150 : 120, d);
 
             if (isVert) {
-                // ================= VERTICAL FRONT LAYOUT =================
                 const headerH = 250;
                 drawHeaderArtwork(ctx, W, headerH, appState.headerStyle, appState.primaryColor, appState.secondaryColor, appState.accentColor);
                 drawLanyardPunchHole(ctx, W, appState.lanyardHole);
 
-                // Organization Logo & Header Text
                 drawOrgLogo(ctx, 88, 102, 42, d);
 
                 ctx.fillStyle = '#ffffff';
@@ -2401,7 +1667,6 @@
                 ctx.font = `600 14px "${font}", sans-serif`;
                 fitTextOnCanvas(ctx, d.orgTagline || '', 146, 120, W - 170, 14);
 
-                // Identity Badge Pill
                 const badgeText = (d.cardBadge || 'IDENTITY CARD').toUpperCase();
                 ctx.font = `800 13px "${font}", sans-serif`;
                 const bw = Math.max(150, ctx.measureText(badgeText).width + 36);
@@ -2412,22 +1677,18 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(badgeText, 146 + bw / 2, 152);
 
-                // Holder Photo Frame
                 const photoY = 295;
                 drawFramedHolderPhoto(ctx, W / 2, photoY, 108);
 
-                // Optional Hologram Seal overlapping corner of photo
                 if (appState.showHologram) {
                     drawSecurityHologramSeal(ctx, W / 2 + 88, photoY + 78, 34);
                 }
 
-                // Holder Full Name & Designation
                 ctx.textAlign = 'center';
                 ctx.fillStyle = surf.textMain;
                 ctx.font = `800 32px "${font}", sans-serif`;
                 fitTextOnCanvas(ctx, (d.fullName || '').toUpperCase(), W / 2, 452, W - 70, 32);
 
-                // Role / Designation Pill
                 ctx.font = `700 16px "${font}", sans-serif`;
                 const roleText = (d.designation || '').toUpperCase();
                 const roleW = Math.min(W - 80, Math.max(220, ctx.measureText(roleText).width + 44));
@@ -2437,7 +1698,6 @@
                 ctx.fillStyle = '#ffffff';
                 fitTextOnCanvas(ctx, roleText, W / 2, 491, roleW - 24, 16);
 
-                // Structured Details Grid Box
                 const boxX = 48;
                 const boxY = 522;
                 const boxW = W - 96;
@@ -2449,7 +1709,6 @@
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
 
-                // Left Accent Strip on Info Box
                 ctx.fillStyle = appState.secondaryColor;
                 drawRoundedRect(ctx, boxX, boxY, 10, boxH, 5);
                 ctx.fill();
@@ -2478,7 +1737,6 @@
                     fitTextOnCanvas(ctx, f.val || '-', boxX + 185, rowY, boxW - 205, 16);
                 });
 
-                // Bottom Footer Area: Barcode / Front QR & Authorized Signature
                 const footerTop = 812;
                 if (appState.frontQR) {
                     const qrPayload = d.qrCustom || `ID:${d.idNumber}|NAME:${d.fullName}|ORG:${d.orgName}|TEL:${d.phone}`;
@@ -2487,7 +1745,6 @@
                     drawBarcodeOnCanvas(ctx, d.idNumber || 'SDT-2026', 54, footerTop + 12, 275, 76, surf.isDark ? '#f8fafc' : '#0f172a', true);
                 }
 
-                // Authorized Signature block on Right
                 const signCenterX = W - 145;
                 if (appState.signatureImage) {
                     ctx.drawImage(appState.signatureImage, signCenterX - 85, footerTop - 2, 170, 62);
@@ -2504,7 +1761,6 @@
                 ctx.font = `700 13px "${font}", sans-serif`;
                 ctx.fillText(d.signTitle || 'Authorized Signatory', signCenterX, footerTop + 85);
 
-                // Bottom Accent Footer Bar
                 const botGrad = ctx.createLinearGradient(0, H - 56, W, H);
                 botGrad.addColorStop(0, appState.primaryColor);
                 botGrad.addColorStop(1, appState.secondaryColor);
@@ -2520,12 +1776,10 @@
                 fitTextOnCanvas(ctx, `${d.orgWeb || ''}  •  Tel: ${d.orgPhone || ''}`, W / 2, H - 22, W - 40, 14);
 
             } else {
-                // ================= HORIZONTAL FRONT LAYOUT =================
                 const headerH = 165;
                 drawHeaderArtwork(ctx, W, headerH, appState.headerStyle, appState.primaryColor, appState.secondaryColor, appState.accentColor);
                 drawLanyardPunchHole(ctx, W, appState.lanyardHole);
 
-                // Organization Logo & Title
                 drawOrgLogo(ctx, 88, 86, 46, d);
 
                 ctx.textAlign = 'left';
@@ -2537,7 +1791,6 @@
                 ctx.font = `600 15px "${font}", sans-serif`;
                 fitTextOnCanvas(ctx, d.orgTagline || '', 155, 108, W - 380, 15);
 
-                // Top Right Badge Pill
                 const badgeText = (d.cardBadge || 'IDENTITY CARD').toUpperCase();
                 ctx.font = `800 15px "${font}", sans-serif`;
                 const bw = Math.max(180, ctx.measureText(badgeText).width + 40);
@@ -2548,7 +1801,6 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(badgeText, W - bw / 2 - 36, 80);
 
-                // Left Column: Photo Frame + ID Badge
                 const photoX = 185;
                 const photoY = 335;
                 drawFramedHolderPhoto(ctx, photoX, photoY, 104);
@@ -2557,14 +1809,12 @@
                     drawSecurityHologramSeal(ctx, photoX + 82, photoY + 76, 32);
                 }
 
-                // Right Column: Name, Designation & 2-Column Data Grid
                 const rightX = 340;
                 ctx.textAlign = 'left';
                 ctx.fillStyle = surf.textMain;
                 ctx.font = `800 34px "${font}", sans-serif`;
                 fitTextOnCanvas(ctx, (d.fullName || '').toUpperCase(), rightX, 218, W - rightX - 40, 34);
 
-                // Designation Bar
                 ctx.fillStyle = appState.secondaryColor;
                 drawRoundedRect(ctx, rightX, 232, 390, 32, 8);
                 ctx.fill();
@@ -2572,7 +1822,6 @@
                 ctx.font = `700 15px "${font}", sans-serif`;
                 fitTextOnCanvas(ctx, (d.designation || '').toUpperCase(), rightX + 14, 253, 365, 15);
 
-                // Details Grid (2 columns x 3 rows)
                 const hFields = [
                     { label: 'ID NUMBER', val: d.idNumber },
                     { label: 'BLOOD GROUP', val: d.bloodGroup },
@@ -2597,7 +1846,6 @@
                     fitTextOnCanvas(ctx, f.val || '-', fx, fy + 24, 295, 18);
                 });
 
-                // Bottom Barcode & Signature Row
                 if (appState.frontBarcode) {
                     drawBarcodeOnCanvas(ctx, d.idNumber || 'SDT-2026', rightX, 495, 290, 66, surf.isDark ? '#f8fafc' : '#0f172a', true);
                 }
@@ -2616,7 +1864,6 @@
                 ctx.font = `700 12px "${font}", sans-serif`;
                 ctx.fillText(d.signTitle || 'Authorized Signatory', signX, 557);
 
-                // Bottom Strip
                 ctx.fillStyle = appState.primaryColor;
                 ctx.fillRect(0, H - 48, W, 48);
                 ctx.fillStyle = appState.accentColor;
@@ -2629,13 +1876,11 @@
             }
         }
 
-        // BACK CARD RENDERER (SUPPORTS BOTH VERTICAL AND HORIZONTAL CR80)
         function renderBackCardCanvas(ctx, W, H, d) {
             const surf = getSurfaceColors();
             const font = appState.fontFamily;
             const isVert = W < H;
 
-            // Base Background
             ctx.fillStyle = surf.bg;
             ctx.fillRect(0, 0, W, H);
             drawCardSecurityPattern(ctx, W, H, appState.bgPattern, appState.primaryColor, surf.isDark);
@@ -2644,8 +1889,6 @@
             const qrPayload = d.qrCustom || `BEGIN:VCARD\nFN:${d.fullName}\nTITLE:${d.designation}\nORG:${d.orgName}\nTEL:${d.phone}\nNOTE:ID ${d.idNumber} Blood ${d.bloodGroup}\nEND:VCARD`;
 
             if (isVert) {
-                // ================= VERTICAL BACK LAYOUT =================
-                // Top Header Bar + Magnetic Stripe visual
                 ctx.fillStyle = appState.primaryColor;
                 ctx.fillRect(0, 0, W, 115);
                 ctx.fillStyle = appState.accentColor;
@@ -2660,7 +1903,6 @@
                 ctx.fillStyle = 'rgba(255,255,255,0.85)';
                 ctx.fillText('TERMS, VERIFICATION & EMERGENCY DETAILS', W / 2, 96);
 
-                // Residential & Emergency Contact Card
                 const pad = 44;
                 ctx.fillStyle = surf.boxBg;
                 drawRoundedRect(ctx, pad, 152, W - pad * 2, 165, 16);
@@ -2682,7 +1924,6 @@
                 ctx.font = `700 14px "${font}", sans-serif`;
                 ctx.fillText(`Emergency Call: ${d.phone || '-'}   |   Issued: ${d.issueDate || '-'}`, pad + 20, 294);
 
-                // Terms & Instructions Section
                 ctx.fillStyle = appState.secondaryColor;
                 ctx.font = `800 15px "${font}", sans-serif`;
                 ctx.fillText('⚖️ IMPORTANT INSTRUCTIONS & GUIDELINES', pad, 362);
@@ -2695,7 +1936,6 @@
                     curY = wrapTextOnCanvas(ctx, line, pad, curY, W - pad * 2, 22, 3) + 10;
                 });
 
-                // Smart Verification QR & Code-128 Barcode Block
                 const qrBoxY = 565;
                 ctx.fillStyle = surf.boxBg;
                 drawRoundedRect(ctx, pad, qrBoxY, W - pad * 2, 195, 16);
@@ -2720,7 +1960,6 @@
                     drawBarcodeOnCanvas(ctx, d.idNumber || 'SDT-2026', rightColX, qrBoxY + 110, W - pad - rightColX - 24, 62, surf.isDark ? '#f8fafc' : '#0f172a', true);
                 }
 
-                // Return Office Address Footer Box
                 const botY = 795;
                 ctx.textAlign = 'center';
                 drawOrgLogo(ctx, W / 2, botY + 24, 28, d);
@@ -2734,7 +1973,6 @@
                 fitTextOnCanvas(ctx, d.orgAddress || '', W / 2, botY + 102, W - 70, 14);
                 fitTextOnCanvas(ctx, `Helpline: ${d.orgPhone || ''}  |  ${d.orgWeb || ''}`, W / 2, botY + 126, W - 70, 14);
 
-                // Bottom Accent Bar
                 ctx.fillStyle = appState.primaryColor;
                 ctx.fillRect(0, H - 46, W, 46);
                 ctx.fillStyle = appState.accentColor;
@@ -2744,8 +1982,6 @@
                 ctx.fillText('DIGITAL PVC CARD SECURED BY SOLU STUDIO PRO', W / 2, H - 18);
 
             } else {
-                // ================= HORIZONTAL BACK LAYOUT =================
-                // Top Magnetic-style Header Strip
                 ctx.fillStyle = appState.primaryColor;
                 ctx.fillRect(0, 0, W, 92);
                 ctx.fillStyle = appState.accentColor;
@@ -2761,7 +1997,6 @@
                 ctx.fillStyle = appState.accentColor;
                 ctx.fillText(`ISSUED: ${d.issueDate || '-'}  |  EXP: ${d.validDate || '-'}`, W - 45, 58);
 
-                // Left Side: Address + Terms & Conditions
                 const leftX = 45;
                 ctx.textAlign = 'left';
                 ctx.fillStyle = appState.secondaryColor;
@@ -2784,7 +2019,6 @@
                     ty = wrapTextOnCanvas(ctx, line, leftX, ty, 560, 21, 2) + 8;
                 });
 
-                // Organization Return Box at bottom left
                 ctx.fillStyle = surf.boxBg;
                 drawRoundedRect(ctx, leftX, 425, 560, 125, 14);
                 ctx.fill();
@@ -2799,7 +2033,6 @@
                 fitTextOnCanvas(ctx, d.orgAddress || '', leftX + 92, 486, 450, 13.5);
                 fitTextOnCanvas(ctx, `Tel: ${d.orgPhone || ''}  •  ${d.orgWeb || ''}`, leftX + 92, 512, 450, 13.5);
 
-                // Right Column: Verification QR & Barcode Panel
                 const qrPanelX = 640;
                 ctx.fillStyle = surf.boxBg;
                 drawRoundedRect(ctx, qrPanelX, 125, W - qrPanelX - 40, 425, 18);
@@ -2822,7 +2055,6 @@
                     drawBarcodeOnCanvas(ctx, d.idNumber || 'SDT-2026', qrPanelX + 32, 395, W - qrPanelX - 104, 72, surf.isDark ? '#f8fafc' : '#0f172a', true);
                 }
 
-                // Bottom Footer Strip
                 ctx.fillStyle = appState.primaryColor;
                 ctx.fillRect(0, H - 42, W, 42);
                 ctx.fillStyle = '#ffffff';
@@ -2832,7 +2064,6 @@
             }
         }
 
-        // Helper: Auto-shrink single line text to fit maxWidth
         function fitTextOnCanvas(ctx, text, x, y, maxWidth, initialSize) {
             let size = initialSize;
             const fontPart = ctx.font.split('px')[1] || ' sans-serif';
@@ -2844,7 +2075,6 @@
             ctx.fillText(text, x, y);
         }
 
-        // Helper: Multi-line word wrap on canvas
         function wrapTextOnCanvas(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
             const words = (text || '').split(' ');
             let line = '';
@@ -2868,7 +2098,7 @@
         }
 
         /********************************************************************
-         * 6. 200+ TEMPLATES UI BROWSER & SELECTION LOGIC
+         * 4. TEMPLATE BROWSER & UI LOGIC
          ********************************************************************/
         function renderCategoryPills() {
             const container = document.getElementById('categoryPillsContainer');
@@ -2903,7 +2133,6 @@
             filterTemplates();
         }
 
-        // Generate Mini SVG Preview Thumbnail for each of the 200 templates
         function buildTemplateMiniSVG(t) {
             const isVert = t.orientation === 'vertical';
             const bgFill = t.cardBgMode === 'dark' ? '#0f172a' : (t.cardBgMode === 'cream' ? '#fffbeb' : '#ffffff');
@@ -2915,15 +2144,10 @@
                     <rect width="100" height="145" rx="8" fill="${bgFill}"/>
                     <path d="M0 0 H100 V38 Q50 52 0 38 Z" fill="${t.primary}"/>
                     <rect x="0" y="34" width="100" height="4" fill="${t.accent}"/>
-                    <rect x="38" y="5" width="24" height="3.5" rx="1.5" fill="#cbd5e1"/>
                     <circle cx="50" cy="54" r="17" fill="#ffffff" stroke="${t.accent}" stroke-width="2.5"/>
                     <circle cx="50" cy="50" r="6" fill="${t.secondary}"/>
-                    <path d="M38 65 Q50 55 62 65" fill="${t.secondary}"/>
                     <rect x="20" y="78" width="60" height="6" rx="3" fill="${textBar}"/>
                     <rect x="28" y="88" width="44" height="5" rx="2.5" fill="${t.secondary}"/>
-                    <rect x="16" y="100" width="68" height="3" rx="1.5" fill="#94a3b8"/>
-                    <rect x="16" y="107" width="68" height="3" rx="1.5" fill="#94a3b8"/>
-                    <rect x="16" y="114" width="50" height="3" rx="1.5" fill="#94a3b8"/>
                     <rect x="0" y="133" width="100" height="12" fill="${t.primary}"/>
                 </svg>`;
             } else {
@@ -2936,8 +2160,6 @@
                     <circle cx="32" cy="53" r="6" fill="${t.secondary}"/>
                     <rect x="60" y="40" width="65" height="6" rx="3" fill="${textBar}"/>
                     <rect x="60" y="50" width="48" height="5" rx="2.5" fill="${t.secondary}"/>
-                    <rect x="60" y="61" width="70" height="3" rx="1.5" fill="#94a3b8"/>
-                    <rect x="60" y="68" width="55" height="3" rx="1.5" fill="#94a3b8"/>
                     <rect x="0" y="90" width="145" height="10" fill="${t.primary}"/>
                 </svg>`;
             }
@@ -2993,7 +2215,6 @@
             appState.cardBgMode = t.cardBgMode;
             appState.lanyardHole = t.lanyardHole;
 
-            // Sync UI customization controls with chosen template
             document.getElementById('sel_orientation').value = t.orientation;
             document.getElementById('sel_headerStyle').value = t.headerStyle;
             document.getElementById('sel_photoShape').value = t.photoShape;
@@ -3034,9 +2255,6 @@
             showToast(`Switched to ${appState.orientation.toUpperCase()} CR80 Layout`);
         }
 
-        /********************************************************************
-         * 7. LIVE FORM SYNC, SAMPLE PRESETS & CUSTOMIZATION HANDLERS
-         ********************************************************************/
         function syncFormToState() {
             const fields = [
                 'fullName', 'designation', 'idNumber', 'department', 'bloodGroup',
@@ -3186,9 +2404,6 @@
             showToast(`Loaded ${type.toUpperCase()} Sample Data`);
         }
 
-        /********************************************************************
-         * 8. MEDIA UPLOADS & INTERACTIVE SIGNATURE PAD
-         ********************************************************************/
         function handleImageUpload(event, targetType) {
             const file = event.target.files?.[0];
             if (!file) return;
@@ -3252,7 +2467,6 @@
             showToast('Restored auto-generated vector crest logo');
         }
 
-        // Live Signature Drawing Pad
         function initSignaturePad() {
             const canvas = document.getElementById('signaturePadCanvas');
             const ctx = canvas.getContext('2d');
@@ -3344,9 +2558,6 @@
             img.src = canvas.toDataURL('image/png');
         }
 
-        /********************************************************************
-         * 9. HIGH-DPI PNG EXPORT, BULK CSV & A4 PRINT SHEET ENGINE
-         ********************************************************************/
         function exportCardImage(whichSide) {
             const frontCanvas = document.getElementById('frontCardCanvas');
             const backCanvas = document.getElementById('backCardCanvas');
@@ -3359,7 +2570,6 @@
                 triggerCanvasDownload(backCanvas, `${safeName}_BACK_CR80.png`);
                 showToast('⬇️ Saved High-DPI Back Card PNG!');
             } else {
-                // Combined Front + Back Side-by-Side PNG with Cut Guide
                 const gap = 48;
                 const pad = 40;
                 const combo = document.createElement('canvas');
@@ -3379,7 +2589,6 @@
                 cctx.drawImage(frontCanvas, pad, pad + 15);
                 cctx.drawImage(backCanvas, pad + frontCanvas.width + gap, pad + 15);
 
-                // Center fold/cut dashed line
                 cctx.strokeStyle = '#94a3b8';
                 cctx.setLineDash([10, 8]);
                 cctx.lineWidth = 2;
@@ -3402,7 +2611,6 @@
             document.body.removeChild(link);
         }
 
-        // Batch Queue Management
         function addToBatchQueue(customData = null) {
             const snapshot = JSON.parse(JSON.stringify(customData || appState.data));
             const tempFront = document.createElement('canvas');
@@ -3420,7 +2628,6 @@
                 rawData: snapshot
             });
 
-            // Restore main live stage
             renderBothCardSides();
             updateBatchQueueUI();
             showToast(`➕ Added "${snapshot.fullName}" to Print Queue (${appState.batchQueue.length})`);
@@ -3496,7 +2703,6 @@
             showToast('⚡ Generated 5 Staff ID Cards into Batch Print Queue!');
         }
 
-        // Bulk CSV Download & Parser
         function downloadSampleCSV() {
             const sample = `FullName,Designation,IDNumber,Department,BloodGroup,DOB,Phone\nAARAV SHARMA,SENIOR ARCHITECT,SDT-101,Cloud AI,O+ Positive,14 Aug 1996,+91 9876543210\nNEHA GUPTA,PRODUCT MANAGER,SDT-102,Operations,B+ Positive,21 Oct 1997,+91 9876500011\nRAHUL VERMA,SYSTEMS ENGINEER,SDT-103,Cyber Security,A+ Positive,08 Jan 1998,+91 9876500022`;
             const blob = new Blob([sample], { type: 'text/csv;charset=utf-8;' });
@@ -3529,7 +2735,7 @@
             let added = 0;
             lines.forEach((line, idx) => {
                 const cols = line.split(',').map(c => c.trim());
-                if (idx === 0 && cols[0].toLowerCase().includes('name')) return; // Skip header row
+                if (idx === 0 && cols[0].toLowerCase().includes('name')) return;
                 if (cols.length >= 2) {
                     const custom = {
                         ...appState.data,
@@ -3548,12 +2754,7 @@
             showToast(`✅ Imported ${added} ID Cards into Batch Print Queue!`);
         }
 
-        /********************************************************************
-         * 9B. FAIL-PROOF A4 & PVC PRINT / PDF ENGINE + 300-DPI A4 SHEET PNG
-         ********************************************************************/
-        // Returns the list of rendered Front+Back card pairs based on selected print mode
         function getActiveCardsForPrint() {
-            // Always make sure current live canvases are freshly rendered
             renderBothCardSides();
             const currFrontUrl = document.getElementById('frontCardCanvas').toDataURL('image/png', 1.0);
             const currBackUrl = document.getElementById('backCardCanvas').toDataURL('image/png', 1.0);
@@ -3576,7 +2777,6 @@
             }
         }
 
-        // Builds clean, self-contained HTML markup for A4 sheets (5 Vertical cards or 4 Horizontal cards per A4 page)
         function buildPrintableA4Markup() {
             const mode = document.getElementById('sel_printMode')?.value || 'a4_queue';
             const cropStyle = document.getElementById('sel_cropMarks')?.value || 'dashed';
@@ -3590,7 +2790,6 @@
                 ? 'border-left: 0.35mm dashed #94a3b8;'
                 : (cropStyle === 'solid' ? 'border-left: 0.25mm solid #cbd5e1;' : 'border-left: none;');
 
-            // Group cards into A4 pages (5 pairs per page for vertical, 4 pairs for horizontal)
             const perPage = 5;
             const pages = [];
             for (let i = 0; i < cards.length; i += perPage) {
@@ -3638,7 +2837,6 @@
             return { html: pagesHtml, totalCards: cards.length, totalPages: pages.length };
         }
 
-        // Open Interactive On-Screen A4 Print & PDF Sheet Preview Modal
         function openA4PrintPreviewModal() {
             const modal = document.getElementById('printPreviewModal');
             document.getElementById('modal_printMode').value = document.getElementById('sel_printMode').value;
@@ -3670,7 +2868,6 @@
                 `Showing ${totalCards} Front+Back Card Pair(s) across ${totalPages} A4 Sheet(s) • Exact CR80 (85.6mm × 54mm)`;
         }
 
-        // Helper: Wait until all <img> tags inside a container have fully loaded & decoded
         function waitForImagesInContainer(container) {
             const imgs = Array.from(container.querySelectorAll('img'));
             if (imgs.length === 0) return Promise.resolve();
@@ -3685,20 +2882,16 @@
             }));
         }
 
-        // Direct In-Page Print / Save as PDF (Waits for all images + uses body.is-printing class)
         async function triggerDirectPrint() {
             const mount = document.getElementById('printMountArea');
             const { html, totalCards } = buildPrintableA4Markup();
             mount.innerHTML = html;
 
             showToast(`🖨️ Preparing ${totalCards} Card(s) for A4 Print / PDF...`);
-
-            // Activate printing class so #printMountArea is rendered in layout before window.print()
             document.body.classList.add('is-printing');
 
             await waitForImagesInContainer(mount);
 
-            // Allow browser 2 animation frames to paint decoded bitmaps before invoking print dialog
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     setTimeout(() => {
@@ -3715,17 +2908,15 @@
             });
         }
 
-        // Clean cleanup when print dialog closes
         window.addEventListener('afterprint', () => {
             document.body.classList.remove('is-printing');
         });
 
-        // Guaranteed Fallback: Opens a standalone printable HTML document in a new browser tab
         function printInNewTabFallback() {
             const { html, totalCards } = buildPrintableA4Markup();
             const printWin = window.open('', '_blank');
             if (!printWin) {
-                showToast('⚠️ Pop-up blocked! Use "Download Full A4 Sheet (300-DPI PNG)" instead.', '⚠️');
+                showToast('⚠️ Pop-up blocked! Use "Download Full A4 Sheet" instead.', '⚠️');
                 return;
             }
 
@@ -3770,23 +2961,19 @@
             printWin.document.close();
         }
 
-        // Direct 300-DPI Full A4 Sheet PNG Compositor & Downloader (2480 x 3508 px exact A4 @ 300 DPI)
         async function downloadFullA4SheetPNG() {
             showToast('⚙️ Rendering 300-DPI Full A4 Print Sheet PNG...');
-            const cards = getActiveCardsForPrint().slice(0, 5); // Up to 5 cards per A4 sheet
+            const cards = getActiveCardsForPrint().slice(0, 5);
             const cropStyle = document.getElementById('sel_cropMarks')?.value || 'dashed';
 
-            // Exact A4 at 300 DPI: 210mm x 297mm = 2480 x 3508 px
             const a4Canvas = document.createElement('canvas');
             a4Canvas.width = 2480;
             a4Canvas.height = 3508;
             const ctx = a4Canvas.getContext('2d');
 
-            // Crisp White A4 background
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, a4Canvas.width, a4Canvas.height);
 
-            // Header Guide Text
             ctx.fillStyle = '#334155';
             ctx.font = 'bold 28px "Inter", sans-serif';
             ctx.textAlign = 'center';
@@ -3799,7 +2986,6 @@
             ctx.lineTo(a4Canvas.width - 120, 96);
             ctx.stroke();
 
-            // Helper to load dataURL into Image
             const loadImg = (url) => new Promise(resolve => {
                 const im = new Image();
                 im.onload = () => resolve(im);
@@ -3814,13 +3000,8 @@
             for (let i = 0; i < cards.length; i++) {
                 const c = cards[i];
                 const isVert = c.orientation === 'vertical';
-                // Exact 300 DPI pixel size for CR80: 54mm = 638px, 85.6mm = 1012px
                 const cardW = isVert ? 638 : 1012;
                 const cardH = isVert ? 1012 : 638;
-
-                // If vertical, scale slightly if 5 cards need to fit vertically on 1 A4 (5 * 640px fits easily; for vertical 1012px height, 3 rows fit per A4 or 5 scaled/landscape)
-                // Wait: Vertical card is 54mm wide x 85.6mm tall (638px x 1012px). On A4 portrait (3508px tall), 3 rows of vertical cards (3 * 1012 = 3036px) fit at 100% scale, or rotated 90deg 5 rows (5 * 638 = 3190px) fit!
-                // Let's draw up to 3 vertical pairs at 100% upright, or if >3 cards, auto-rotate 90deg so all 5 fit at exact 100% CR80 physical dimensions!
                 const rotateFor5 = isVert && cards.length > 3;
 
                 const fImg = await loadImg(c.frontDataUrl);
@@ -3835,7 +3016,6 @@
                     if (fImg) ctx.drawImage(fImg, startX, curY, cardW, cardH);
                     if (bImg) ctx.drawImage(bImg, startX + cardW + gapX, curY, cardW, cardH);
 
-                    // Crop & Fold lines
                     if (cropStyle !== 'none') {
                         ctx.save();
                         ctx.strokeStyle = '#64748b';
@@ -3844,7 +3024,6 @@
                         ctx.strokeRect(startX, curY, cardW, cardH);
                         ctx.strokeRect(startX + cardW + gapX, curY, cardW, cardH);
 
-                        // Center fold line
                         ctx.beginPath();
                         ctx.moveTo(startX + cardW + gapX / 2, curY - 12);
                         ctx.lineTo(startX + cardW + gapX / 2, curY + cardH + 12);
@@ -3853,7 +3032,6 @@
                     }
                     curY += cardH + rowGapY;
                 } else {
-                    // Rotated 90deg so 5 vertical cards fit on a single A4 at exact 100% CR80 size (1012px wide x 638px tall per card)
                     const rW = 1012;
                     const rH = 638;
                     const totalPairW = rW * 2 + gapX;
@@ -3895,9 +3073,6 @@
             showToast('✅ Downloaded Full A4 300-DPI Print Sheet PNG!');
         }
 
-        /********************************************************************
-         * 10. UI NAVIGATION, VIEW SWITCHERS & INITIALIZATION
-         ********************************************************************/
         function switchMainTab(tabName) {
             const tabs = ['templates', 'details', 'media', 'style', 'print'];
             tabs.forEach(t => {
@@ -3944,7 +3119,6 @@
             }, 2800);
         }
 
-        // Boot the entire studio on page load
         window.addEventListener('DOMContentLoaded', () => {
             build200TemplatesCatalog();
             renderCategoryPills();
